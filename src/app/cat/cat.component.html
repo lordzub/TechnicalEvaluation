@@ -1,0 +1,124 @@
+
+<!-- This creates and angular material accordian for every item in the CatModel object wich is the data retrieved from the API call -->
+<mat-accordion *ngFor="let c of CatData; let i =index ">
+
+  <!--
+    This creates the expansion panel for categories and skips the cvategory that has name " "
+    This was hardcoded and I am sure there is a more dynamic way of doing it
+
+    It also sets the boolean in the category boolean array with the same index as the catModel Array to true when opend and false when closed
+  -->
+  <mat-expansion-panel hideToggle *ngIf="c.name!=''" (opened)="panelOpenState[i] = true"
+  (closed)="panelOpenState[i] = false">
+    <mat-expansion-panel-header class="right-aligned-header"  >
+
+
+       <!--Simple dynamic styling using ngif directive for the title of the expansion panel -->
+      <mat-panel-title *ngIf="c.name != '' && c.name !=null"  >
+      <h1> {{c.name}} </h1>
+      </mat-panel-title>
+
+
+      <mat-panel-title *ngIf="c.name == ''">
+
+       </mat-panel-title>
+       <mat-panel-title *ngIf="c.name == null">
+        <h1> Null </h1>
+       </mat-panel-title>
+
+
+       <!--
+
+        Dynamic styling for the description of the expansion panel using the boolean array for the categories
+
+        Shows: Click to see products of {{c.name}} when expansion panel is closed and
+        Click to close products of {{c.name}} when expansion panel is opened
+
+
+      -->
+       <span *ngIf="!panelOpenState[i]">
+      <mat-panel-description *ngIf="c.name != null">
+        Click to see products of {{c.name}}
+
+      </mat-panel-description>
+      <mat-panel-description *ngIf="c.name == null">
+
+
+        Click to see products of null
+      </mat-panel-description>
+    </span>
+
+    <span *ngIf="panelOpenState[i]">
+      <mat-panel-description *ngIf="c.name != null">
+        Click to close products of {{c.name}}
+
+      </mat-panel-description>
+      <mat-panel-description *ngIf="c.name == null">
+
+
+        Click to close products of null
+      </mat-panel-description>
+    </span>
+    </mat-expansion-panel-header>
+
+    <span *ngFor="let product of c.products; let j = index">
+
+
+
+
+      <!--
+        Creates expansion panels of the products for that have the same catergoryId as the id of the category
+
+       -->
+      <mat-expansion-panel  *ngIf="product.categoryId == c.id" (opened)="panelOpenStateProducts[j] = true"
+      (closed)="panelOpenStateProducts[j] = false">
+        <mat-expansion-panel-header >
+
+          <mat-panel-title  >
+          <h2> {{product.name}}</h2>
+
+          </mat-panel-title>
+
+                 <!--
+
+        Dynamic styling for the description of the expansion panel using the boolean array for the products
+
+        Shows: Click to see description of {{product.name}} when expansion panel is closed and
+        Click to close description of {{product.name}} when expansion panel is opened
+
+      -->
+
+          <span *ngIf="!panelOpenStateProducts[j]">
+          <mat-panel-description >
+            Click to see description of {{product.name}}
+          </mat-panel-description>
+        </span>
+
+        <span *ngIf="panelOpenStateProducts[j]">
+          <mat-panel-description >
+            Click to close description of {{product.name}}
+          </mat-panel-description>
+        </span>
+
+        <!-- displays the data of the product when opened -->
+        </mat-expansion-panel-header>
+        <p>Category ID: {{product.categoryId}}</p>
+        <p>Product ID: {{product.id}}</p>
+      </mat-expansion-panel>
+
+
+
+
+    </span>
+  </mat-expansion-panel>
+
+</mat-accordion>
+
+
+<!-- Few Notes:
+I originally tried to use both avaible apis, however I was running into a problem with async functions when making multple api calls,
+
+I then realised that all the information neccssary can be gathered from one API call and then decided to use that
+
+-->
+
